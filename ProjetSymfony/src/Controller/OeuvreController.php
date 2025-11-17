@@ -9,12 +9,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/oeuvre')]
-final class OeuvreController extends AbstractController
+class OeuvreController extends AbstractController
 {
-    #[Route(name: 'app_oeuvre_index', methods: ['GET'])]
+    #[Route('/', name: 'app_oeuvre_index', methods: ['GET'])]
     public function index(OeuvreRepository $oeuvreRepository): Response
     {
         return $this->render('oeuvre/index.html.twig', [
@@ -33,12 +33,13 @@ final class OeuvreController extends AbstractController
             $entityManager->persist($oeuvre);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_oeuvre_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', 'Oeuvre ajoutée avec succès.');
+
+            return $this->redirectToRoute('app_oeuvre_index');
         }
 
         return $this->render('oeuvre/new.html.twig', [
-            'oeuvre' => $oeuvre,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -59,23 +60,28 @@ final class OeuvreController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_oeuvre_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', 'Oeuvre modifiée avec succès.');
+
+            return $this->redirectToRoute('app_oeuvre_index');
         }
 
         return $this->render('oeuvre/edit.html.twig', [
             'oeuvre' => $oeuvre,
-            'form' => $form,
+            'form'   => $form->createView(),
         ]);
     }
 
     #[Route('/{id}', name: 'app_oeuvre_delete', methods: ['POST'])]
     public function delete(Request $request, Oeuvre $oeuvre, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$oeuvre->getId(), $request->getPayload()->getString('_token'))) {
+        $token = $request->request->get('_token');
+
+        if ($this->isCsrfTokenValid('delete'.$oeuvre->getId(), $token)) {
             $entityManager->remove($oeuvre);
             $entityManager->flush();
+            $this->addFlash('success', 'Oeuvre supprimée avec succès.');
         }
 
-        return $this->redirectToRoute('app_oeuvre_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_oeuvre_index');
     }
 }
