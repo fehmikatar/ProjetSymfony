@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Artty - Portfolio{% endblock %}</title>
-    <meta name="description" content="{% block meta_description %}Professional illustrator and designer portfolio{% endblock %}">
-    <meta name="keywords" content="{% block meta_keywords %}illustrator, portfolio, designer, web development{% endblock %}">
+    <meta name="description" content="{% block meta_description %}{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
 
     <!-- Favicons -->
     <link href="{{ asset('Frontend/assets/img/favicon.png') }}" rel="icon">
@@ -40,30 +40,12 @@
 
             <nav id="navmenu" class="navmenu">
                 <ul>
-                    <li><a href="{{ path('app_front_index') }}"
-                           class="{% if app.request.attributes.get('_route') == 'app_front_index' %}active{% endif %}">
-                            Home
-                        </a></li>
-                    <li><a href="{{ path('app_front_about') }}"
-                           class="{% if app.request.attributes.get('_route') == 'app_front_about' %}active{% endif %}">
-                            About
-                        </a></li>
-                    <li><a href="{{ path('app_front_resume') }}"
-                           class="{% if app.request.attributes.get('_route') == 'app_front_resume' %}active{% endif %}">
-                            Resume
-                        </a></li>
-                    <li><a href="{{ path('app_front_services') }}"
-                           class="{% if app.request.attributes.get('_route') == 'app_front_services' %}active{% endif %}">
-                            Services
-                        </a></li>
-                    <li><a href="{{ path('app_front_portfolio') }}"
-                           class="{% if app.request.attributes.get('_route') == 'app_front_portfolio' %}active{% endif %}">
-                            Portfolio
-                        </a></li>
-                    <li><a href="{{ path('app_front_contact') }}"
-                           class="{% if app.request.attributes.get('_route') == 'app_front_contact' %}active{% endif %}">
-                            Contact
-                        </a></li>
+                    <li><a href="{{ path('app_front_index') }}" class="{% if app.request.get('_route') == 'app_home' %}active{% endif %}">Home</a></li>
+                    <li><a href="{{ path('app_front_about') }}" class="{% if app.request.get('_route') == 'app_about' %}active{% endif %}">About</a></li>
+                    <li><a href="{{ path('app_front_resume') }}" class="{% if app.request.get('_route') == 'app_resume' %}active{% endif %}">Resume</a></li>
+                    <li><a href="{{ path('app_front_services') }}" class="{% if app.request.get('_route') == 'app_services' %}active{% endif %}">Services</a></li>
+                    <li><a href="{{ path('app_front_portfolio') }}" class="{% if app.request.get('_route') == 'app_portfolio' %}active{% endif %}">Portfolio</a></li>
+                    <li><a href="{{ path('app_front_contact') }}" class="{% if app.request.get('_route') == 'app_contact' %}active{% endif %}">Contact</a></li>
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
@@ -86,7 +68,7 @@
     <footer id="footer" class="footer light-background">
         <div class="container">
             <div class="copyright text-center">
-                <p>© <span>Copyright</span> <strong class="px-1 sitename">Artty</strong> <span>All Rights Reserved</span></p>
+                <p>© <span>Copyright</span> <strong class="px-1 sitename">Kelly</strong> <span>All Rights Reserved</span></p>
             </div>
             <div class="social-links d-flex justify-content-center">
                 <a href=""><i class="bi bi-twitter-x"></i></a>
@@ -95,7 +77,7 @@
                 <a href=""><i class="bi bi-linkedin"></i></a>
             </div>
             <div class="credits">
-                Designed by <a href="https://bootstrapmade.com/">4SE2 Group</a>
+                Designed by <a href="https://bootstrapmade.com/">4SE2 Made</a>
             </div>
         </div>
     </footer>
