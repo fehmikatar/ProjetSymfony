@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Kelly Adams - Professional Illustrator{% endblock %}
+
+{% block body %}
+    <!-- Hero Section -->
+    <section id="hero" class="hero section">
+        <img alt="" src="{{ asset('img/hero-bg.jpg') }}" data-aos="fade-in">
+
+        <div class="container text-center" data-aos="zoom-out" data-aos-delay="100">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h2>Kelly Adams</h2>
+                    <p>I'm a professional illustrator from San Francisco</p>
+                    <a href="{{ path('about') }}" class="btn-get-started">About Me</a>
+                </div>
+            </div>
+        </div>
+    </section><!-- /Hero Section -->
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="portfolio section">
+        <div class="container section-title" data-aos="fade-up">
+            <h2>Portfolio</h2>
+            <p>Découvrez mes dernières œuvres</p>
+        </div>
+
+        <div class="container">
+            <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
+                {% for oeuvre in oeuvres %}
+                    <div class="col-lg-4 col-md-6 portfolio-item isotope-item">
+                        <div class="portfolio-content h-100">
+                            <img src="{{ asset('img/' ~ oeuvre.image) }}" class="img-fluid" alt="{{ oeuvre.titre }}">
+                            <div class="portfolio-info">
+                                <h4>{{ oeuvre.titre }}</h4>
+                                <p>{{ oeuvre.description|slice(0, 100) }}...</p>
+                                <a href="{{ path('app_oeuvre_show', {'id': oeuvre.id}) }}" title="{{ oeuvre.titre }}" class="details-link">
+                                    <i class="bi bi-link-45deg"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-12">
+                        <p class="text-center">Aucune œuvre disponible pour le moment.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section><!-- /Portfolio Section -->
+
+    <!-- Stats Section -->
+    <section id="stats" class="stats section light-background">
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+            <div class="row gy-4">
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-item text-center w-100 h-100">
+                        <span data-purecounter-start="0" data-purecounter-end="{{ oeuvres|length }}" data-purecounter-duration="1" class="purecounter"></span>
+                        <p>Œuvres</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-item text-center w-100 h-100">
+                        <span data-purecounter-start="0" data-purecounter-end="{{ categories|length }}" data-purecounter-duration="1" class="purecounter"></span>
+                        <p>Catégories</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-item text-center w-100 h-100">
+                        <span data-purecounter-start="0" data-purecounter-end="150" data-purecounter-duration="1" class="purecounter"></span>
+                        <p>Clients Satisfaits</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-item text-center w-100 h-100">
+                        <span data-purecounter-start="0" data-purecounter-end="10" data-purecounter-duration="1" class="purecounter"></span>
+                        <p>Années d'expérience</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><!-- /Stats Section -->
+{% endblock %}
