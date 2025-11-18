@@ -1,38 +1,46 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Oeuvre{% endblock %}
+{% block title %}{{ oeuvre.titre }}{% endblock %}
 
 {% block body %}
-    <h1>Oeuvre</h1>
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card shadow-lg">
+                    {% if oeuvre.image %}
+                        <img src="{{ asset('uploads/oeuvres/' ~ oeuvre.image) }}"
+                             class="card-img-top"
+                             alt="{{ oeuvre.titre }}"
+                             style="max-height: 500px; object-fit: cover;">
+                    {% endif %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ oeuvre.id }}</td>
-            </tr>
-            <tr>
-                <th>Titre</th>
-                <td>{{ oeuvre.titre }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ oeuvre.description }}</td>
-            </tr>
-            <tr>
-                <th>Prix</th>
-                <td>{{ oeuvre.prix }}</td>
-            </tr>
-            <tr>
-                <th>Image</th>
-                <td>{{ oeuvre.image }}</td>
-            </tr>
-        </tbody>
-    </table>
+                    <div class="card-body p-5">
+                        <h1 class="card-title display-5 fw-bold">{{ oeuvre.titre }}</h1>
+                        <p class="lead text-muted mb-4">{{ oeuvre.category.nom ?? 'Sans catégorie' }}</p>
 
-    <a href="{{ path('app_oeuvre_index') }}">back to list</a>
+                        <hr>
 
-    <a href="{{ path('app_oeuvre_edit', {'id': oeuvre.id}) }}">edit</a>
+                        <p class="fs-4 fw-bold text-primary mb-4">
+                            {{ oeuvre.prix|number_format(2) }} €
+                        </p>
 
-    {{ include('oeuvre/_delete_form.html.twig') }}
+                        <div class="mb-4">
+                            <h5>Description</h5>
+                            <p class="text-muted">{{ oeuvre.description|nl2br }}</p>
+                        </div>
+
+                        <div class="d-flex gap-3">
+                            <a href="{{ path('app_oeuvre_index') }}" class="btn btn-secondary">
+                                ← Retour à la liste
+                            </a>
+                            <a href="{{ path('app_oeuvre_edit', {'id': oeuvre.id}) }}" class="btn btn-warning">
+                                Modifier
+                            </a>
+                            {{ include('oeuvre/_delete_form.html.twig') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

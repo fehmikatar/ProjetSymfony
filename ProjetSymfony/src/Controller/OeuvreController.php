@@ -10,10 +10,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/oeuvre')]
 class OeuvreController extends AbstractController
 {
+    public function __construct(private readonly SluggerInterface $slugger)
+    {
+    }
+
     #[Route('/', name: 'app_oeuvre_index', methods: ['GET'])]
     public function index(OeuvreRepository $oeuvreRepository): Response
     {
@@ -30,11 +36,12 @@ class OeuvreController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->handleImageUpload($oeuvre);
+
             $entityManager->persist($oeuvre);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Oeuvre ajoutée avec succès.');
-
+            $this->addFlash('success', 'Œuvre ajoutée avec succès.');
             return $this->redirectToRoute('app_oeuvre_index');
         }
 
@@ -58,10 +65,11 @@ class OeuvreController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->handleImageUpload($oeuvre);
+
             $entityManager->flush();
 
-            $this->addFlash('success', 'Oeuvre modifiée avec succès.');
-
+            $this->addFlash('success', 'Œuvre modifiée avec succès.');
             return $this->redirectToRoute('app_oeuvre_index');
         }
 
@@ -74,14 +82,33 @@ class OeuvreController extends AbstractController
     #[Route('/{id}', name: 'app_oeuvre_delete', methods: ['POST'])]
     public function delete(Request $request, Oeuvre $oeuvre, EntityManagerInterface $entityManager): Response
     {
-        $token = $request->request->get('_token');
-
-        if ($this->isCsrfTokenValid('delete'.$oeuvre->getId(), $token)) {
+        if ($this->isCsrfTokenValid('delete'.$oeuvre->getId(), $request->request->get('_token'))) {
             $entityManager->remove($oeuvre);
             $entityManager->flush();
-            $this->addFlash('success', 'Oeuvre supprimée avec succès.');
+            $this->addFlash('success', 'Œuvre supprimée avec succès.');
         }
 
         return $this->redirectToRoute('app_oeuvre_index');
+    }
+
+    private function handleImageUpload(Oeuvre $oeuvre): void
+    {
+        $imageFile = $oeuvre->getImageFile();
+
+        if ($imageFile instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
+            $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename = $this->slugger->slug($originalFilename);
+            $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+
+            try {
+                $imageFile->move(
+                    $this->getParameter('images_directory'),
+                    $newFilename
+                );
+                $oeuvre->setImage($newFilename);
+            } catch (FileException $e) {
+                $this->addFlash('error', 'Impossible d\'uploader l\'image : '.$e->getMessage());
+            }
+        }
     }
 }

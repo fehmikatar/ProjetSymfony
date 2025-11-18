@@ -1,4 +1,70 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{# templates/oeuvre/_form.html.twig #}
+{{ form_start(form, {
+    'attr': {
+        'class': 'needs-validation',
+        'novalidate': true,
+        'enctype': 'multipart/form-data'
+    }
+}) }}
+
+<div class="row g-4">
+
+    <div class="col-md-6">
+        {{ form_label(form.titre, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.titre, {'attr': {'class': 'form-control', 'placeholder': 'Titre de l’œuvre'}}) }}
+        {{ form_errors(form.titre) }}
+    </div>
+
+    <div class="col-md-6">
+        {{ form_label(form.prix, null, {'label_attr': {'class': 'form-label'}}) }}
+        <div class="input-group">
+            {{ form_widget(form.prix, {'attr': {'class': 'form-control', 'placeholder': '0.00'}}) }}
+            <span class="input-group-text">€</span>
+        </div>
+        {{ form_errors(form.prix) }}
+    </div>
+
+    <div class="col-12">
+        {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 4, 'placeholder': 'Description détaillée...'}}) }}
+        {{ form_errors(form.description) }}
+    </div>
+
+    <div class="col-md-6">
+        {{ form_label(form.category, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.category, {'attr': {'class': 'form-select'}}) }}
+        {{ form_errors(form.category) }}
+    </div>
+
+    <div class="col-md-6">
+        {{ form_label(form.imageFile, 'Image de l’œuvre', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.imageFile, {'attr': {'class': 'form-control', 'accept': 'image/*'}}) }}
+        {{ form_errors(form.imageFile) }}
+        <div class="form-text">JPG, PNG, WebP • Max 5 Mo</div>
+
+        {# Prévisualisation de l’image actuelle (seulement en édition) #}
+        {% if oeuvre.image ?? null %}
+            <div class="mt-3 p-3 border rounded bg-light">
+                <p class="mb-2 fw-bold text-success">Image actuelle :</p>
+                <img src="{{ asset('uploads/oeuvres/' ~ oeuvre.image) }}"
+                     alt="{{ oeuvre.titre }}"
+                     class="img-thumbnail"
+                     style="max-height: 180px;">
+                <p class="small text-muted mt-2 mb-0">
+                    Laissez le champ vide pour conserver cette image
+                </p>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary btn-lg px-5">
+            {{ button_label|default('Sauvegarder') }}
+        </button>
+        <a href="{{ path('app_oeuvre_index') }}" class="btn btn-secondary btn-lg ms-3">
+            Annuler
+        </a>
+    </div>
+</div>
+
 {{ form_end(form) }}

@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\OeuvreRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 #[ORM\Entity(repositoryClass: OeuvreRepository::class)]
 class Oeuvre
@@ -23,12 +25,17 @@ class Oeuvre
     #[ORM\Column]
     private ?float $prix = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
     #[ORM\ManyToOne(inversedBy: 'oeuvres')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
+
+    // Champ temporaire pour l'upload (non persistant)
+    private ?File $imageFile = null;
+
+    // ---------------- GETTERS & SETTERS ----------------
 
     public function getId(): ?int
     {
@@ -43,7 +50,6 @@ class Oeuvre
     public function setTitre(string $titre): static
     {
         $this->titre = $titre;
-
         return $this;
     }
 
@@ -55,7 +61,6 @@ class Oeuvre
     public function setDescription(string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
@@ -67,7 +72,6 @@ class Oeuvre
     public function setPrix(float $prix): static
     {
         $this->prix = $prix;
-
         return $this;
     }
 
@@ -76,10 +80,9 @@ class Oeuvre
         return $this->image;
     }
 
-    public function setImage(string $image): static
+    public function setImage(?string $image): static
     {
         $this->image = $image;
-
         return $this;
     }
 
@@ -91,7 +94,18 @@ class Oeuvre
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
-
         return $this;
+    }
+
+    // ---- Gestion du fichier uploadé ----
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
     }
 }

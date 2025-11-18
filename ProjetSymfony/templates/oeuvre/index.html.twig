@@ -1,41 +1,69 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Oeuvre index{% endblock %}
+{% block title %}Toutes les œuvres{% endblock %}
 
 {% block body %}
-    <h1>Oeuvre index</h1>
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2">Liste des œuvres</h1>
+            <a href="{{ path('app_oeuvre_new') }}" class="btn btn-success">
+                + Ajouter une œuvre
+            </a>
+        </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Titre</th>
-                <th>Description</th>
-                <th>Prix</th>
-                <th>Image</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for oeuvre in oeuvres %}
-            <tr>
-                <td>{{ oeuvre.id }}</td>
-                <td>{{ oeuvre.titre }}</td>
-                <td>{{ oeuvre.description }}</td>
-                <td>{{ oeuvre.prix }}</td>
-                <td>{{ oeuvre.image }}</td>
-                <td>
-                    <a href="{{ path('app_oeuvre_show', {'id': oeuvre.id}) }}">show</a>
-                    <a href="{{ path('app_oeuvre_edit', {'id': oeuvre.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
         {% endfor %}
-        </tbody>
-    </table>
 
-    <a href="{{ path('app_oeuvre_new') }}">Create new</a>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                <tr>
+                    <th>Image</th>
+                    <th>Titre</th>
+                    <th>Description</th>
+                    <th class="text-end">Prix</th>
+                    <th>Catégorie</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for oeuvre in oeuvres %}
+                    <tr>
+                        <td>
+                            {% if oeuvre.image %}
+                                <img src="{{ asset('uploads/oeuvres/' ~ oeuvre.image) }}"
+                                     alt="{{ oeuvre.titre }}"
+                                     class="rounded"
+                                     style="width: 80px; height: 80px; object-fit: cover;">
+                            {% else %}
+                                <div class="bg-light border rounded d-flex align-items-center justify-content-center"
+                                     style="width: 80px; height: 80px;">
+                                    <small class="text-muted">Pas d'image</small>
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td><strong>{{ oeuvre.titre }}</strong></td>
+                        <td>{{ oeuvre.description|length > 80 ? oeuvre.description|slice(0, 80) ~ '...' : oeuvre.description }}</td>
+                        <td class="text-end fw-bold text-primary">{{ oeuvre.prix|number_format(2) }} €</td>
+                        <td>{{ oeuvre.category.nom ?? 'Non classée' }}</td>
+                        <td class="text-center">
+                            <a href="{{ path('app_oeuvre_show', {'id': oeuvre.id}) }}" class="btn btn-sm btn-outline-info">Voir</a>
+                            <a href="{{ path('app_oeuvre_edit', {'id': oeuvre.id}) }}" class="btn btn-sm btn-outline-warning">Éditer</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            Aucune œuvre trouvée. <a href="{{ path('app_oeuvre_new') }}">Créez la première !</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}

@@ -1,11 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Oeuvre{% endblock %}
+{% block title %}Nouvelle œuvre{% endblock %}
 
 {% block body %}
-    <h1>Create new Oeuvre</h1>
+    <div class="container py-5">
+        <h1 class="mb-5">Créer une nouvelle œuvre</h1>
 
-    {{ include('oeuvre/_form.html.twig') }}
-
-    <a href="{{ path('app_oeuvre_index') }}">back to list</a>
+        {{ include('oeuvre/_form.html.twig', {
+            'button_label': 'Créer l’œuvre'
+        }) }}
+    </div>
 {% endblock %}
