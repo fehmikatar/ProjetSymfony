@@ -2,110 +2,64 @@
 
 namespace App\Entity;
 
-use App\Repository\OeuvreRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-#[ORM\Entity(repositoryClass: OeuvreRepository::class)]
+#[ORM\Entity]
+#[Vich\Uploadable]
 class Oeuvre
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: 'integer')]
+    private $id;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: 'string', length: 255)]
     private ?string $titre = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'float', nullable: true)]
     private ?float $prix = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $image = null;
-
-    #[ORM\ManyToOne(inversedBy: 'oeuvres')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Category::class)]
     private ?Category $category = null;
 
-    // Champ temporaire pour l'upload (non persistant)
+    #[Vich\UploadableField(mapping: 'oeuvre_images', fileNameProperty: 'imageName')]
     private ?File $imageFile = null;
 
-    // ---------------- GETTERS & SETTERS ----------------
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $imageName = null;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
 
-    public function getTitre(): ?string
-    {
-        return $this->titre;
-    }
+    // Getters / Setters
+    public function getId(): ?int { return $this->id; }
 
-    public function setTitre(string $titre): static
-    {
-        $this->titre = $titre;
-        return $this;
-    }
+    public function getTitre(): ?string { return $this->titre; }
+    public function setTitre(?string $titre): void { $this->titre = $titre; }
 
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
+    public function getDescription(): ?string { return $this->description; }
+    public function setDescription(?string $description): void { $this->description = $description; }
 
-    public function setDescription(string $description): static
-    {
-        $this->description = $description;
-        return $this;
-    }
+    public function getPrix(): ?float { return $this->prix; }
+    public function setPrix(?float $prix): void { $this->prix = $prix; }
 
-    public function getPrix(): ?float
-    {
-        return $this->prix;
-    }
+    public function getCategory(): ?Category { return $this->category; }
+    public function setCategory(?Category $category): void { $this->category = $category; }
 
-    public function setPrix(float $prix): static
-    {
-        $this->prix = $prix;
-        return $this;
-    }
-
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    public function setImage(?string $image): static
-    {
-        $this->image = $image;
-        return $this;
-    }
-
-    public function getCategory(): ?Category
-    {
-        return $this->category;
-    }
-
-    public function setCategory(?Category $category): static
-    {
-        $this->category = $category;
-        return $this;
-    }
-
-    // ---- Gestion du fichier uploadé ----
-
-    public function getImageFile(): ?File
-    {
-        return $this->imageFile;
-    }
-
-    public function setImageFile(?File $imageFile = null): void
-    {
+    public function setImageFile(?File $imageFile = null): void {
         $this->imageFile = $imageFile;
+        if ($imageFile !== null) { $this->updatedAt = new \DateTimeImmutable(); }
     }
+    public function getImageFile(): ?File { return $this->imageFile; }
+
+    public function setImageName(?string $imageName): void { $this->imageName = $imageName; }
+    public function getImageName(): ?string { return $this->imageName; }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): void { $this->updatedAt = $updatedAt; }
+    public function getUpdatedAt(): ?\DateTimeInterface { return $this->updatedAt; }
 }

@@ -1,0 +1,15 @@
+{% extends 'back/base.html.twig' %}
+{% block title %}{{ oeuvre is defined ? 'Modifier' : 'Ajouter' }} une œuvre{% endblock %}
+{% block body %}
+    <div class="container my-5">
+        <h2>{{ oeuvre is defined ? 'Modifier' : 'Ajouter' }} une œuvre</h2>
+        {{ form_start(form) }}
+        {{ form_row(form.titre) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.prix) }}
+        {{ form_row(form.category) }}
+        {{ form_row(form.imageFile) }}
+        <button class="btn btn-success mt-3">Enregistrer</button>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

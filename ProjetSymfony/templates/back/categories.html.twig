@@ -1,0 +1,37 @@
+{% extends 'back/base.html.twig' %}
+{% block title %}Catégories (Admin){% endblock %}
+{% block body %}
+    <div class="container my-5">
+        <h2>Catégories</h2>
+        <form method="get" action="{{ path('app_back_categories') }}" class="d-flex mb-3">
+            <input class="form-control me-2" type="search" name="search" value="{{ search }}" placeholder="Recherche nom…">
+            <button class="btn btn-primary">Chercher</button>
+        </form>
+        <a href="{{ path('app_back_categories_new') }}" class="btn btn-success mb-3">Ajouter une catégorie</a>
+        <table class="table table-hover">
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th><th>Nom</th><th>Description</th><th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for category in categories %}
+                <tr>
+                    <td>{{ category.id }}</td>
+                    <td>{{ category.nom }}</td>
+                    <td>{{ category.description ?? '-' }}</td>
+                    <td>
+                        <a href="{{ path('app_back_categories_edit', {id: category.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        <form method="post" action="{{ path('app_back_categories_delete', {id: category.id}) }}" style="display:inline;" onsubmit="return confirm('Confirmer la suppression ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+                            <button class="btn btn-danger btn-sm">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="4" class="text-center text-muted">Aucune catégorie trouvée.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

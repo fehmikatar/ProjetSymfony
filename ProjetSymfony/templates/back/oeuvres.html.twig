@@ -1,0 +1,43 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Œuvres (Admin){% endblock %}
+{% block body %}
+    <div class="container my-5">
+        <h2>Œuvres</h2>
+        <form method="get" action="{{ path('app_back_oeuvres') }}" class="d-flex mb-3">
+            <input class="form-control me-2" type="search" name="search" value="{{ search }}" placeholder="Recherche titre…">
+            <button class="btn btn-primary">Chercher</button>
+        </form>
+        <a href="{{ path('app_back_oeuvres_new') }}" class="btn btn-success mb-3">Ajouter une œuvre</a>
+        <table class="table table-hover">
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th><th>Titre</th><th>Image</th><th>Catégorie</th><th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for oeuvre in oeuvres %}
+                <tr>
+                    <td>{{ oeuvre.id }}</td>
+                    <td>{{ oeuvre.titre }}</td>
+                    <td>
+                        {% if oeuvre.imageName %}
+                            <img src="{{ asset('images/oeuvres/' ~ oeuvre.imageName) }}" alt="" height="50">
+                        {% endif %}
+                    </td>
+                    <td>{{ oeuvre.category.nom ?? '-' }}</td>
+                    <td>
+                        <a href="{{ path('app_back_oeuvres_edit', {id: oeuvre.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        <form method="post" action="{{ path('app_back_oeuvres_delete', {id: oeuvre.id}) }}" style="display:inline;" onsubmit="return confirm('Confirmer la suppression ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ oeuvre.id) }}">
+                            <button class="btn btn-danger btn-sm">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5" class="text-center text-muted">Aucune œuvre trouvée.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

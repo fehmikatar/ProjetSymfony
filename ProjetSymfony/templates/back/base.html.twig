@@ -74,6 +74,24 @@
                     <span class="nav-link-text ms-1">Tables</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link {% if app.request.attributes.get('_route') == 'app_back_categories' %}active{% endif %}"
+                   href="{{ path('app_back_categories') }}">
+                    <div class="icon icon-shape icon-sm px-0 text-center d-flex align-items-center justify-content-center">
+                        <i class="fa fa-tags"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Catégories</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if app.request.attributes.get('_route') == 'app_back_oeuvres' %}active{% endif %}"
+                   href="{{ path('app_back_oeuvres') }}">
+                    <div class="icon icon-shape icon-sm px-0 text-center d-flex align-items-center justify-content-center">
+                        <i class="fa fa-image"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Œuvres</span>
+                </a>
+            </li>
 
             <li class="nav-item">
                 <a class="nav-link {% if app.request.attributes.get('_route') == 'app_back_wallet' %}active{% endif %}"

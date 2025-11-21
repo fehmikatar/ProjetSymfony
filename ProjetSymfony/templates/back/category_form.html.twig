@@ -1,0 +1,12 @@
+{% extends 'back/base.html.twig' %}
+{% block title %}{{ category is defined ? 'Modifier' : 'Ajouter' }} une catégorie{% endblock %}
+{% block body %}
+    <div class="container my-5">
+        <h2>{{ category is defined ? 'Modifier' : 'Ajouter' }} une catégorie</h2>
+        {{ form_start(form) }}
+        {{ form_row(form.nom) }}
+        {{ form_row(form.description) }}
+        <button class="btn btn-success mt-3">Enregistrer</button>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
